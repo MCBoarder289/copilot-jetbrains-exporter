@@ -7,5 +7,10 @@
 # macOS and Windows runners cannot run natively in Docker, but mapping them to an
 # Ubuntu image lets the test matrix run locally. Java tests pass on all three since
 # they don't depend on OS-specific behavior.
+#
+# NOTE: the windows-latest leg may fail locally with a JAVA_HOME path error — this is
+# a known act quirk with actions/setup-java in Linux containers. Run with
+# --matrix os:ubuntu-latest to skip it:
+#   act -j test --container-architecture linux/amd64 --matrix os:ubuntu-latest
 -P macos-latest=catthehacker/ubuntu:act-22.04
 -P windows-latest=catthehacker/ubuntu:act-22.04
