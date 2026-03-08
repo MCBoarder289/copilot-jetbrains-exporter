@@ -4,8 +4,9 @@ import io.github.copilotjetbrains.model.AgentSession;
 import io.github.copilotjetbrains.model.AgentTurn;
 import org.dizitart.no2.Nitrite;
 import org.dizitart.no2.collection.Document;
-import org.dizitart.no2.collection.NitriteCollection;
+import org.dizitart.no2.collection.NitriteId;
 import org.dizitart.no2.mvstore.MVStoreModule;
+import org.dizitart.no2.store.NitriteMap;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -86,10 +87,10 @@ public class NitriteReader implements Closeable {
      */
     public List<AgentSession> readSessions() {
         Map<String, List<AgentTurn>> turnsBySession = readStandaloneTurns();
-        NitriteCollection sessionColl = db.getCollection(SESSIONS_COLLECTION);
+        NitriteMap<NitriteId, Document> sessionMap = openMap(SESSIONS_COLLECTION);
         List<AgentSession> sessions = new ArrayList<>();
 
-        for (Document doc : sessionColl.find()) {
+        for (Document doc : sessionMap.values()) {
             AgentSession session = parseSession(doc, turnsBySession);
             if (session != null) {
                 sessions.add(session);
@@ -104,9 +105,9 @@ public class NitriteReader implements Closeable {
 
     private Map<String, List<AgentTurn>> readStandaloneTurns() {
         Map<String, List<AgentTurn>> bySession = new HashMap<>();
-        NitriteCollection turnColl = db.getCollection(TURNS_COLLECTION);
+        NitriteMap<NitriteId, Document> turnMap = openMap(TURNS_COLLECTION);
 
-        for (Document doc : turnColl.find()) {
+        for (Document doc : turnMap.values()) {
             AgentTurn turn = parseTurn(doc);
             if (turn != null) {
                 bySession.computeIfAbsent(turn.sessionId(), k -> new ArrayList<>()).add(turn);
@@ -180,6 +181,17 @@ public class NitriteReader implements Closeable {
                 requestText, responseText, modelName, chatMode);
     }
 
+    /**
+     * Opens a raw Nitrite map by name via the store layer, bypassing the collection/repository
+     * type registry. This works regardless of whether JetBrains registered the map as a plain
+     * collection or an object repository.
+     */
+    @SuppressWarnings("unchecked")
+    private NitriteMap<NitriteId, Document> openMap(String mapName) {
+        NitriteMap<?, ?> raw = db.getStore().openMap(mapName, NitriteId.class, Document.class);
+        return (NitriteMap<NitriteId, Document>) raw;
+    }
+
     private String stringField(Document doc, String field) {
         try {
             Object val = doc.get(field);
@@ -221,7 +233,11 @@ public class NitriteReader implements Closeable {
     @Override
     public void close() {
         if (db != null && !db.isClosed()) {
-            db.close();
+            try {
+                db.close();
+            } catch (Exception ignored) {
+                // Committing a read-only store throws on close — this is expected and safe to ignore.
+            }
         }
     }
 }
