@@ -9,35 +9,59 @@ database and converts sessions to formats other tools understand.
 
 ## Requirements
 
-- Java 21 or later — IntelliJ bundles a JDK, so you likely already have it.  
+- **Native binary** (recommended): no Java required — download a pre-built binary for your OS.
+- **JAR**: Java 21 or later. IntelliJ bundles a JDK so you likely already have it.  
   Verify with: `java -version`
 
 ## Installation
 
-Download the latest `copilot-jetbrains-exporter-<version>.jar` from the
-[Releases](../../releases) page. No installation required — the JAR includes all
-dependencies.
+### Option A: Native binary (no Java needed)
+
+Download the binary for your OS from the [Releases](../../releases) page:
+
+| OS | File |
+|----|------|
+| macOS | `copilot-jetbrains-exporter-macos-amd64` |
+| Linux | `copilot-jetbrains-exporter-linux-amd64` |
+| Windows | `copilot-jetbrains-exporter-windows-amd64.exe` |
+
+Make it executable (macOS/Linux):
+```bash
+chmod +x copilot-jetbrains-exporter-macos-amd64
+# Optionally move it onto your PATH:
+mv copilot-jetbrains-exporter-macos-amd64 /usr/local/bin/copilot-jetbrains-exporter
+```
+
+On macOS you may need to allow the binary in **System Settings → Privacy & Security** the
+first time you run it (Gatekeeper prompt).
+
+### Option B: Fat JAR (requires Java 21+)
+
+Download `copilot-jetbrains-exporter-<version>.jar` from [Releases](../../releases).
 
 ## Usage
 
 ```bash
-# Export to agentsview-compatible JSONL (default)
+# Native binary
+copilot-jetbrains-exporter
+
+# Fat JAR
 java -jar copilot-jetbrains-exporter.jar
 
 # Specify where the exported files should go
-java -jar copilot-jetbrains-exporter.jar --output ~/.copilot/jetbrains-sessions
+copilot-jetbrains-exporter --output ~/.copilot/jetbrains-sessions
 
 # Export as Markdown instead
-java -jar copilot-jetbrains-exporter.jar --format MARKDOWN --output ~/Documents/copilot-export
+copilot-jetbrains-exporter --format MARKDOWN --output ~/Documents/copilot-export
 
 # Specify the JetBrains config directory explicitly (non-standard install or Linux)
-java -jar copilot-jetbrains-exporter.jar --source "~/.config/github-copilot"
+copilot-jetbrains-exporter --source "~/.config/github-copilot"
 
 # Preview without writing anything
-java -jar copilot-jetbrains-exporter.jar --dry-run --verbose
+copilot-jetbrains-exporter --dry-run --verbose
 
 # Full help
-java -jar copilot-jetbrains-exporter.jar --help
+copilot-jetbrains-exporter --help
 ```
 
 ### All options
@@ -97,6 +121,16 @@ git clone https://github.com/<your-username>/copilot-jetbrains-exporter.git
 cd copilot-jetbrains-exporter
 ./gradlew app:shadowJar
 # Output: app/build/libs/copilot-jetbrains-exporter-<version>.jar
+```
+
+### Building the native binary locally
+
+Requires [GraalVM CE 21](https://www.graalvm.org/downloads/) on your PATH (or via sdkman:
+`sdk install java 21.0.2-graalce && sdk use java 21.0.2-graalce`):
+
+```bash
+./gradlew app:nativeCompile
+# Output: app/build/native/nativeCompile/copilot-jetbrains-exporter
 ```
 
 ### Running tests

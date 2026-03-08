@@ -1,0 +1,24 @@
+{
+  "types": [
+    {"name": "java.util.LinkedHashMap"},
+    {"name": "java.util.HashMap"},
+    {"name": "java.util.ArrayList"},
+    {"name": "java.util.TreeMap"},
+    {"name": "java.util.HashSet"},
+    {"name": "java.util.Date"},
+    {"name": "java.lang.Long"},
+    {"name": "java.lang.Integer"},
+    {"name": "java.lang.Double"},
+    {"name": "java.lang.Float"},
+    {"name": "java.lang.Boolean"},
+    {"name": "java.lang.String"},
+    {"name": "org.dizitart.no2.collection.NitriteDocument"},
+    {"name": "org.dizitart.no2.collection.NitriteId"},
+    {"name": "org.dizitart.no2.common.DBNull"},
+    {"name": "org.dizitart.no2.common.DBValue"},
+    {"name": "org.dizitart.no2.common.meta.Attributes"},
+    {"name": "org.dizitart.no2.store.StoreCatalog"},
+    {"name": "org.dizitart.no2.store.StoreMetaData"},
+    {"name": "org.dizitart.no2.store.MapMetaData"}
+  ]
+}
