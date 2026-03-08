@@ -20,7 +20,7 @@ import java.util.concurrent.Callable;
                 "Supports agentsview-compatible JSONL output or standalone Markdown files.",
                 "",
                 "Default source directories (auto-detected by OS):",
-                "  macOS:   ~/Library/Application Support/github-copilot/",
+                "  macOS:   ~/.config/github-copilot/  (or $XDG_CONFIG_HOME/github-copilot/)",
                 "  Linux:   ~/.config/github-copilot/  (or $XDG_CONFIG_HOME/github-copilot/)",
                 "  Windows: %%APPDATA%%\\github-copilot\\",
         },

@@ -58,7 +58,7 @@ java -jar copilot-jetbrains-exporter.jar --help
 
 | OS | Auto-detected path |
 |----|-------------------|
-| macOS | `~/Library/Application Support/github-copilot/` |
+| macOS | `~/.config/github-copilot/` (or `$XDG_CONFIG_HOME/github-copilot/`) |
 | Linux | `~/.config/github-copilot/` (or `$XDG_CONFIG_HOME/github-copilot/`) |
 | Windows | `%APPDATA%\github-copilot\` |
 

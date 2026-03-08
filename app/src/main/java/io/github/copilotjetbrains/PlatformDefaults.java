@@ -9,7 +9,7 @@ import java.util.List;
  *
  * <p>JetBrains stores Copilot sessions in:
  * <ul>
- *   <li>macOS: {@code ~/Library/Application Support/github-copilot/}</li>
+ *   <li>macOS: {@code ~/.config/github-copilot/}</li>
  *   <li>Linux: {@code ~/.config/github-copilot/} (or {@code $XDG_CONFIG_HOME/github-copilot/})</li>
  *   <li>Windows: {@code %APPDATA%\github-copilot\}</li>
  * </ul>
@@ -29,7 +29,13 @@ public final class PlatformDefaults {
         List<Path> dirs = new ArrayList<>();
 
         if (os.contains("mac") || os.contains("darwin")) {
-            dirs.add(Path.of(home, "Library", "Application Support", "github-copilot"));
+            // JetBrains uses ~/.config on macOS, same as Linux.
+            String xdgConfig = System.getenv("XDG_CONFIG_HOME");
+            if (xdgConfig != null && !xdgConfig.isBlank()) {
+                dirs.add(Path.of(xdgConfig, "github-copilot"));
+            } else {
+                dirs.add(Path.of(home, ".config", "github-copilot"));
+            }
         } else if (os.contains("win")) {
             String appData = System.getenv("APPDATA");
             if (appData == null || appData.isBlank()) {
