@@ -1,0 +1,10 @@
+# act runner image mappings
+# catthehacker images are lightweight GitHub Actions-compatible Ubuntu images.
+# Full image list: https://github.com/catthehacker/docker_images
+-P ubuntu-latest=catthehacker/ubuntu:act-22.04
+-P ubuntu-22.04=catthehacker/ubuntu:act-22.04
+
+# macOS and Windows runners cannot run in Docker containers.
+# native and release jobs that require these platforms are skipped locally.
+# Test them by pushing to GitHub or running nativeCompile directly:
+#   ./gradlew app:nativeCompile   (builds for your current OS)
