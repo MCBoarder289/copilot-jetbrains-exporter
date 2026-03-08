@@ -4,7 +4,8 @@
 -P ubuntu-latest=catthehacker/ubuntu:act-22.04
 -P ubuntu-22.04=catthehacker/ubuntu:act-22.04
 
-# macOS and Windows runners cannot run in Docker containers.
-# native and release jobs that require these platforms are skipped locally.
-# Test them by pushing to GitHub or running nativeCompile directly:
-#   ./gradlew app:nativeCompile   (builds for your current OS)
+# macOS and Windows runners cannot run natively in Docker, but mapping them to an
+# Ubuntu image lets the test matrix run locally. Java tests pass on all three since
+# they don't depend on OS-specific behavior.
+-P macos-latest=catthehacker/ubuntu:act-22.04
+-P windows-latest=catthehacker/ubuntu:act-22.04
