@@ -151,11 +151,15 @@ useful for verifying the `test` job before pushing.
 # Install (macOS)
 brew install act
 
-# Run only the test job (fast, works on any platform)
-act -j test
+# Run only the ubuntu matrix leg (recommended — fast, avoids a known act/Windows quirk)
+act -j test --container-architecture linux/amd64 --matrix os:ubuntu-latest
 
-# Run with a specific event (e.g. simulate a push to main)
-act push -j test
+# Run the full matrix (windows-latest will likely fail with a JAVA_HOME path error
+# in act — this is a known act limitation with Linux containers, not a real test failure)
+act -j test --container-architecture linux/amd64
+
+# Simulate a push to main
+act push -j test --container-architecture linux/amd64 --matrix os:ubuntu-latest
 ```
 
 **Important limitations with `act` for this project:**
