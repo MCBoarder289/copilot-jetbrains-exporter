@@ -1,0 +1,14 @@
+[versions]
+junit-jupiter = "5.11.4"
+nitrite      = "4.2.1"
+picocli      = "4.7.6"
+jackson      = "2.18.2"
+assertj      = "3.27.2"
+
+[libraries]
+junit-jupiter    = { module = "org.junit.jupiter:junit-jupiter",                      version.ref = "junit-jupiter" }
+nitrite          = { module = "org.dizitart:nitrite",                                version.ref = "nitrite" }
+nitrite-mvstore  = { module = "org.dizitart:nitrite-mvstore-adapter",               version.ref = "nitrite" }
+picocli          = { module = "info.picocli:picocli",                               version.ref = "picocli" }
+jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind",        version.ref = "jackson" }
+assertj          = { module = "org.assertj:assertj-core",                           version.ref = "assertj" }
