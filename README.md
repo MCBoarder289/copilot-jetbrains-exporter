@@ -142,6 +142,90 @@ Requires [GraalVM CE 21](https://www.graalvm.org/downloads/) on your PATH (or vi
 Tests use synthetic (fictional) conversation data — no real sessions are required or
 included in the test suite.
 
+### Testing CI workflows locally with `act`
+
+[act](https://nektosact.com/) runs GitHub Actions workflows locally inside Docker. It is
+useful for verifying the `test` job before pushing.
+
+```bash
+# Install (macOS)
+brew install act
+
+# Run only the test job (fast, works on any platform)
+act -j test
+
+# Run with a specific event (e.g. simulate a push to main)
+act push -j test
+```
+
+**Important limitations with `act` for this project:**
+
+- The `test` job runs fine locally — it just needs Java 21.
+- The `native` job uses `graalvm/setup-graalvm@v1` which pulls a large Docker image and
+  compiles a Linux binary inside a container. It will work but is slow (~10-15 min).
+- The `release` job calls `softprops/action-gh-release` which requires a real
+  `GITHUB_TOKEN` with write access. For local testing, skip it or use `--dry-run`.
+- `act` runs Linux containers on all platforms; native binaries for macOS and Windows
+  **must** be built on real GitHub-hosted runners — there is no local workaround.
+
+For the native image, the best local test is `./gradlew app:nativeCompile` directly (see
+above), which builds the binary for your current OS.
+
+## Releasing a new version
+
+All releases are cut by pushing a version tag to `main`. The CI pipeline handles
+everything else.
+
+### Step-by-step
+
+1. **Bump the version** in `gradle.properties`:
+   ```
+   version=0.2.0
+   ```
+
+2. **Commit** the version bump:
+   ```bash
+   git add gradle/properties
+   git commit -m "chore: bump version to 0.2.0"
+   ```
+
+3. **Push the commit** to `main` (or merge your PR first):
+   ```bash
+   git push origin main
+   ```
+
+4. **Tag the release** — the tag triggers all build and release jobs:
+   ```bash
+   git tag v0.2.0
+   git push origin v0.2.0
+   ```
+
+5. **Watch the run** at `https://github.com/<owner>/copilot-jetbrains-exporter/actions`.
+   The pipeline runs three jobs in parallel:
+   - `build` — fat JAR on Ubuntu
+   - `native` — native binaries on Ubuntu, macOS, and Windows
+   Then `release` downloads all artifacts and creates the GitHub Release with
+   auto-generated release notes.
+
+### What gets published
+
+| Artifact | Platform |
+|----------|----------|
+| `copilot-jetbrains-exporter-<version>.jar` | All (requires Java 21) |
+| `copilot-jetbrains-exporter-linux-amd64` | Linux x86-64 |
+| `copilot-jetbrains-exporter-macos-amd64` | macOS (Intel + Apple Silicon via Rosetta) |
+| `copilot-jetbrains-exporter-windows-amd64.exe` | Windows x86-64 |
+
+### If a release job fails
+
+- Re-trigger only the failed job from the Actions UI (use "Re-run failed jobs").
+- Do **not** delete and re-push the tag — this creates a duplicate release. Instead,
+  delete the draft/broken release on GitHub, fix the issue, and re-run the workflow.
+- If the native macOS or Windows job fails due to a reflection or serialization error,
+  run `./gradlew app:nativeCompile` locally on that OS first to get the exact error,
+  update `reflect-config.json` or `serialization-config.json`, and push a fix commit
+  before re-running.
+
 ## A note on compatibility
 
 JetBrains stores sessions using [Nitrite 4.x](https://github.com/nitrite/nitrite-java),
