@@ -35,7 +35,7 @@ tasks.named<Test>("test") {
 tasks.named<org.gradle.jvm.tasks.Jar>("shadowJar") {
     archiveBaseName.set("copilot-jetbrains-exporter")
     archiveClassifier.set("")
-    archiveVersion.set("0.1.0")
+    archiveVersion.set(project.version.toString())
     manifest {
         attributes["Main-Class"] = "io.github.copilotjetbrains.Main"
     }

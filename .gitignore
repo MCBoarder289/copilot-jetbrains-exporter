@@ -6,3 +6,12 @@ build
 
 # Ignore Kotlin plugin data
 .kotlin
+
+# IDE
+.idea/
+*.iml
+*.iws
+
+# Editor swap files
+*.swp
+*.swo
