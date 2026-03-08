@@ -1,11 +1,24 @@
 # copilot-jetbrains-exporter
 
 Export JetBrains IDE Copilot chat sessions (IntelliJ, PyCharm, etc.) for viewing in
-[agentsview](https://github.com/wesm/agentsview) or as standalone Markdown files.
+[agentsview](https://www.agentsview.io/) or as standalone Markdown files.
 
-JetBrains stores Copilot sessions in a Nitrite/MVStore database
-(`copilot-agent-sessions-nitrite.db`) rather than plain JSON. This tool reads that
-database and converts sessions to formats other tools understand.
+## Why this exists
+
+[agentsview](https://www.agentsview.io/) is a local viewer for AI agent sessions from
+tools like Claude Code, Copilot CLI, Codex, and others. It reads sessions stored as
+JSONL files on disk.
+
+JetBrains IDEs (IntelliJ, PyCharm, etc.) store GitHub Copilot chat sessions in a
+[Nitrite](https://github.com/nitrite/nitrite-java) embedded database
+(`copilot-agent-sessions-nitrite.db`) — a Java-native binary format that agentsview
+cannot read directly. This tool bridges that gap by reading the Nitrite database and
+converting sessions to JSONL so agentsview can display them alongside sessions from
+other tools.
+
+Inspired by [nineninesevenfour's export script](https://gist.github.com/nineninesevenfour/9e63ea6cbbf4c307814614ebd8e442e8),
+which demonstrated that the Nitrite database was readable and showed what the session
+data looked like.
 
 ## Requirements
 
@@ -98,7 +111,7 @@ non-standard location or you have multiple profiles.
 |          | Linux: `~/.local/share/copilot-jetbrains-exporter/export/` |
 |          | Windows: `%LOCALAPPDATA%\copilot-jetbrains-exporter\export\` |
 
-## Using with agentsview
+## Using with [agentsview](https://www.agentsview.io/)
 
 After running the exporter, point agentsview at the output directory:
 
