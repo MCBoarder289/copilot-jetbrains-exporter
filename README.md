@@ -123,6 +123,44 @@ cd copilot-jetbrains-exporter
 # Output: app/build/libs/copilot-jetbrains-exporter-<version>.jar
 ```
 
+### Common development commands
+
+```bash
+# Run all tests
+./gradlew app:test
+
+# Run tests and show output even on success (useful when debugging a specific test)
+./gradlew app:test --info
+
+# Run a single test class
+./gradlew app:test --tests "io.github.copilotjetbrains.NitriteReaderTest"
+
+# Run a single test method
+./gradlew app:test --tests "io.github.copilotjetbrains.NitriteReaderTest.testReadSessions"
+
+# Build the fat JAR (all dependencies bundled)
+./gradlew app:shadowJar
+# Output: app/build/libs/copilot-jetbrains-exporter-<version>.jar
+
+# Run the fat JAR directly (quick smoke test without installing)
+java -jar app/build/libs/copilot-jetbrains-exporter-*.jar --dry-run
+
+# Clean build outputs
+./gradlew clean
+
+# List all available tasks
+./gradlew tasks
+```
+
+> **Java version:** The project requires Java 21. If your default `java` is older, set
+> `JAVA_HOME` before running Gradle:
+> ```bash
+> # sdkman
+> sdk use java 21.0.6-tem
+> # or export directly
+> export JAVA_HOME=$HOME/.sdkman/candidates/java/21.0.6-tem
+> ```
+
 ### Building the native binary locally
 
 Requires [GraalVM CE 21](https://www.graalvm.org/downloads/) on your PATH (or via sdkman:
@@ -131,6 +169,9 @@ Requires [GraalVM CE 21](https://www.graalvm.org/downloads/) on your PATH (or vi
 ```bash
 ./gradlew app:nativeCompile
 # Output: app/build/native/nativeCompile/copilot-jetbrains-exporter
+
+# Smoke test the native binary
+./app/build/native/nativeCompile/copilot-jetbrains-exporter --dry-run
 ```
 
 ### Running tests
