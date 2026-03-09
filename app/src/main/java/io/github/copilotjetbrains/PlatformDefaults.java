@@ -68,7 +68,7 @@ public final class PlatformDefaults {
         String home = System.getProperty("user.home");
 
         if (format == Main.Format.JSONL) {
-            // Agentsview-compatible: place alongside CLI Copilot sessions.
+            // agentsview-compatible: place alongside CLI Copilot sessions.
             return Path.of(home, ".copilot", "jetbrains-sessions");
         }
 

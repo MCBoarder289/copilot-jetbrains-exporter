@@ -103,7 +103,7 @@ public final class JsonlExporter {
         ObjectNode context = data.putObject("context");
         data.put("sessionId", session.id());
         // JetBrains sessions don't expose the project working directory.
-        // Agentsview will fall back to displaying the session title.
+        // agentsview will fall back to displaying the session title.
         context.put("cwd",    "");
         context.put("branch", "");
         // Title is passed as a hint; agentsview's Copilot parser ignores unknown fields.

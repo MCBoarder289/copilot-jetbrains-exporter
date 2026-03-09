@@ -243,7 +243,7 @@ everything else.
 
 2. **Commit** the version bump:
    ```bash
-   git add gradle/properties
+   git add gradle.properties
    git commit -m "chore: bump version to 0.2.0"
    ```
 
