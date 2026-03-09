@@ -38,15 +38,24 @@ Download the binary for your OS from the [Releases](../../releases) page:
 | Linux | `copilot-jetbrains-exporter-linux-amd64` |
 | Windows | `copilot-jetbrains-exporter-windows-amd64.exe` |
 
-Make it executable (macOS/Linux):
+**macOS / Linux:**
 ```bash
-chmod +x copilot-jetbrains-exporter-macos-amd64
-# Optionally move it onto your PATH:
+# Make executable
+chmod +x copilot-jetbrains-exporter-macos-amd64   # or -linux-amd64
+
+# macOS only: remove the Gatekeeper quarantine flag (required or macOS will block it)
+xattr -d com.apple.quarantine copilot-jetbrains-exporter-macos-amd64
+
+# Test with a dry run first
+./copilot-jetbrains-exporter-macos-amd64 --dry-run
+
+# Move onto your PATH so you can run it from anywhere as 'copilot-jetbrains-exporter'
 mv copilot-jetbrains-exporter-macos-amd64 /usr/local/bin/copilot-jetbrains-exporter
 ```
 
-On macOS you may need to allow the binary in **System Settings → Privacy & Security** the
-first time you run it (Gatekeeper prompt).
+**Windows:** Rename the file to `copilot-jetbrains-exporter.exe`, then either run it
+directly or add its directory to your `PATH` in System Settings to run it as
+`copilot-jetbrains-exporter` from any terminal.
 
 ### Option B: Fat JAR (requires Java 21+)
 
