@@ -112,25 +112,25 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: copilot-jetbrains-exporter-linux-amd64
-          path: dist/
+          path: dist/linux/
 
       - name: Download macOS binary
         uses: actions/download-artifact@v4
         with:
           name: copilot-jetbrains-exporter-macos-amd64
-          path: dist/
+          path: dist/macos/
 
       - name: Download Windows binary
         uses: actions/download-artifact@v4
         with:
           name: copilot-jetbrains-exporter-windows-amd64
-          path: dist/
+          path: dist/windows/
 
       - name: Rename binaries for release
         run: |
-          mv dist/copilot-jetbrains-exporter dist/copilot-jetbrains-exporter-linux-amd64 2>/dev/null || true
-          mv dist/copilot-jetbrains-exporter.exe dist/copilot-jetbrains-exporter-windows-amd64.exe 2>/dev/null || true
-          # macOS binary is in a separate download and may share the same name; rename it
+          mv dist/linux/copilot-jetbrains-exporter dist/copilot-jetbrains-exporter-linux-amd64
+          mv dist/macos/copilot-jetbrains-exporter dist/copilot-jetbrains-exporter-macos-amd64
+          mv dist/windows/copilot-jetbrains-exporter.exe dist/copilot-jetbrains-exporter-windows-amd64.exe
           ls -la dist/
 
       - name: Create release
