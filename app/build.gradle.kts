@@ -41,6 +41,22 @@ tasks.named<Test>("test") {
     useJUnitPlatform()
 }
 
+val generateVersionProperties by tasks.registering {
+    val outputDir = layout.buildDirectory.dir("generated/resources")
+    outputs.dir(outputDir)
+    doLast {
+        val f = outputDir.get().asFile.resolve("version.properties")
+        f.parentFile.mkdirs()
+        f.writeText("version=${project.version}\n")
+    }
+}
+
+tasks.named("processResources") {
+    dependsOn(generateVersionProperties)
+}
+
+sourceSets["main"].resources.srcDir(layout.buildDirectory.dir("generated/resources"))
+
 tasks.named<org.gradle.jvm.tasks.Jar>("shadowJar") {
     archiveBaseName.set("copilot-jetbrains-exporter")
     archiveClassifier.set("")

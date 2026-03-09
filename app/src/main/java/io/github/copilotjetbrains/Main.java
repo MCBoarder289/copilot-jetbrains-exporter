@@ -2,6 +2,7 @@ package io.github.copilotjetbrains;
 
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
+import picocli.CommandLine.IVersionProvider;
 import picocli.CommandLine.Option;
 import io.github.copilotjetbrains.model.AgentSession;
 
@@ -9,12 +10,13 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.concurrent.Callable;
 
 @Command(
         name        = "copilot-jetbrains-exporter",
         mixinStandardHelpOptions = true,
-        version     = "0.1.0",
+        versionProvider = Main.VersionProvider.class,
         description = {
                 "Export JetBrains Copilot chat sessions from the Nitrite database.",
                 "Supports agentsview-compatible JSONL output or standalone Markdown files.",
@@ -65,6 +67,17 @@ public class Main implements Callable<Integer> {
             description = "Print additional detail during export."
     )
     private boolean verbose;
+
+    static class VersionProvider implements IVersionProvider {
+        @Override
+        public String[] getVersion() throws Exception {
+            var url = Main.class.getClassLoader().getResource("version.properties");
+            if (url == null) return new String[]{"unknown"};
+            var props = new Properties();
+            try (var in = url.openStream()) { props.load(in); }
+            return new String[]{props.getProperty("version", "unknown")};
+        }
+    }
 
     public static void main(String[] args) {
         int exitCode = new CommandLine(new Main()).execute(args);
