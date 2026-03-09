@@ -42,12 +42,14 @@ tasks.named<Test>("test") {
 }
 
 val generateVersionProperties by tasks.registering {
+    val version = project.version.toString()
     val outputDir = layout.buildDirectory.dir("generated/resources")
+    inputs.property("version", version)
     outputs.dir(outputDir)
     doLast {
         val f = outputDir.get().asFile.resolve("version.properties")
         f.parentFile.mkdirs()
-        f.writeText("version=${project.version}\n")
+        f.writeText("version=$version\n")
     }
 }
 
